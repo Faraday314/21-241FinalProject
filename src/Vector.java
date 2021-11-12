@@ -21,7 +21,7 @@ public interface Vector <V extends Vector<V>> {
     V add(V vector);
     V subtract(V vector);
     V project(V ontoVector);
-    V rotate(math.Axis<V> u, math.Axis<V> v, double angleRadians);
+    V rotate(Axis<V> u, Axis<V> v, double angleRadians);
     V set(V vector);
     V set(MatrixSimple vectorMatrix);
 }

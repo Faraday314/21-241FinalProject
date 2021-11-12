@@ -2,7 +2,7 @@ import java.util.Arrays;
 
 import static java.lang.Math.sqrt;
 
-public class MainClass5 {
+public class MainClass {
     public static void main(String[] args) {
         MatrixSimple eig = new MatrixSimple(new double[][]{
                 {5,2,-2},

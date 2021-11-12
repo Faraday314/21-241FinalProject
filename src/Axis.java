@@ -9,7 +9,7 @@
  * @see Axis2D
  * @see Axis3D
  * @see VectorND
- * @see math.Vector2D
+ * @see Vector2D
  * @see Vector3D
  * @since 1.1.0
  */
@@ -19,7 +19,7 @@ public interface Axis<V extends Vector<V>> {
      *
      * @return The unit vector associated with this axis.
      * @see VectorND
-     * @see math.Vector2D
+     * @see Vector2D
      * @see Vector3D
      */
     V getAxisVector();

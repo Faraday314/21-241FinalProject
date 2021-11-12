@@ -1,6 +1,6 @@
 import static java.lang.Math.*;
 
-public class Vector3D extends math.EuclideanVector<Vector3D> {
+public class Vector3D extends EuclideanVector<Vector3D> {
 
     private static final Vector3D ZERO_VECTOR = new Vector3D(0, 0, 0);
 
@@ -9,22 +9,22 @@ public class Vector3D extends math.EuclideanVector<Vector3D> {
         ExceptionChecker.assertTrue(vectorMatrix.getNumRows() == 3, new ArithmeticException("Matrix vector is wrong size."));
     }
 
-    public Vector3D(math.Point3D start, math.Point3D end) {
+    public Vector3D(Point3D start, Point3D end) {
         super(start.vectorTo(end).vectorMatrix);
     }
-    public Vector3D(math.Point3D end) {
-        this(math.Point3D.getOrigin(), end);
+    public Vector3D(Point3D end) {
+        this(Point3D.getOrigin(), end);
     }
 
     public Vector3D(double x, double y, double z) {
         super(x, y, z);
     }
 
-    public Vector3D(double a, double b, double c, math.CoordinateSystem3D coordinateSystem) {
-        super(coordinateSystem.convertTo(math.CoordinateSystem3D.CARTESIAN).apply(new double[] {a, b, c}));
+    public Vector3D(double a, double b, double c, CoordinateSystem3D coordinateSystem) {
+        super(coordinateSystem.convertTo(CoordinateSystem3D.CARTESIAN).apply(new double[] {a, b, c}));
     }
     public Vector3D(double r, double azimuth, AngleUnit angleUnit, double z) {
-        this(r, angleUnit.convertTo(AngleUnit.RADIANS).apply(azimuth), z, math.CoordinateSystem3D.CYLINDRICAL);
+        this(r, angleUnit.convertTo(AngleUnit.RADIANS).apply(azimuth), z, CoordinateSystem3D.CYLINDRICAL);
     }
 
     public Vector3D(double r, double inclination, AngleUnit inclinationUnit, double azimuth, AngleUnit azimuthUnit) {
@@ -32,11 +32,11 @@ public class Vector3D extends math.EuclideanVector<Vector3D> {
                 r,
                 inclinationUnit.convertTo(AngleUnit.RADIANS).apply(inclination),
                 azimuthUnit.convertTo(AngleUnit.RADIANS).apply(azimuth),
-                math.CoordinateSystem3D.SPHERICAL
+                CoordinateSystem3D.SPHERICAL
         );
     }
 
-    public static Vector3D fromND(math.VectorND vector) {
+    public static Vector3D fromND(VectorND vector) {
         ExceptionChecker.assertEqual(vector.dim(), 3, new ArithmeticException("Vector dimensionality does not match."));
         return new Vector3D(vector.vectorMatrix.copy());
     }

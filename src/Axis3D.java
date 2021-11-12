@@ -5,35 +5,35 @@
  *
  * @author Cole Savage, Level Up
  * @version 1.0.0
- * @see math.Axis
- * @see math.Axis2D
- * @see math.Vector3D
+ * @see Axis
+ * @see Axis2D
+ * @see Vector3D
  * @since 1.1.0
  */
-public class Axis3D implements math.Axis<math.Vector3D> {
+public class Axis3D implements Axis<Vector3D> {
     //Common 3D axes.
     public static final Axis3D
-            POSITIVE_X_AXIS = new Axis3D(new math.Vector3D(1, 0, 0)),
-            POSITIVE_Y_AXIS = new Axis3D(new math.Vector3D(0, 1, 0)),
-            POSITIVE_Z_AXIS = new Axis3D(new math.Vector3D(0, 0, 1)),
-            NEGATIVE_X_AXIS = new Axis3D(new math.Vector3D(-1, 0, 0)),
-            NEGATIVE_Y_AXIS = new Axis3D(new math.Vector3D(0, -1, 0)),
-            NEGATIVE_Z_AXIS = new Axis3D(new math.Vector3D(0, 0, -1));
+            POSITIVE_X_AXIS = new Axis3D(new Vector3D(1, 0, 0)),
+            POSITIVE_Y_AXIS = new Axis3D(new Vector3D(0, 1, 0)),
+            POSITIVE_Z_AXIS = new Axis3D(new Vector3D(0, 0, 1)),
+            NEGATIVE_X_AXIS = new Axis3D(new Vector3D(-1, 0, 0)),
+            NEGATIVE_Y_AXIS = new Axis3D(new Vector3D(0, -1, 0)),
+            NEGATIVE_Z_AXIS = new Axis3D(new Vector3D(0, 0, -1));
 
     //The unit vector going in the direction of the axis.
-    private final math.Vector3D axisUnitVector;
+    private final Vector3D axisUnitVector;
 
     /**
      * The constructor for a 3D axis.
      *
      * @param axisVector A vector pointing in the direction of the axis.
      */
-    public Axis3D(math.Vector3D axisVector) {
+    public Axis3D(Vector3D axisVector) {
         axisUnitVector = axisVector.normalize();
     }
 
     @Override
-    public math.Vector3D getAxisVector() {
+    public Vector3D getAxisVector() {
         return axisUnitVector.copy();
     }
 

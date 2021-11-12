@@ -1,8 +1,8 @@
-public class Point2D extends EuclideanPoint<Point2D, math.Vector2D> {
+public class Point2D extends EuclideanPoint<Point2D, Vector2D> {
     private static final Point2D ORIGIN = new Point2D(0,0);
 
     public Point2D(double a, double b, CoordinateSystem2D coordinateSystem) {
-        super(new math.Vector2D(
+        super(new Vector2D(
                 new MatrixSimple(coordinateSystem.convertTo(CoordinateSystem2D.CARTESIAN).apply(
                         new double[] {a, b}
                 )).transpose()
@@ -16,7 +16,7 @@ public class Point2D extends EuclideanPoint<Point2D, math.Vector2D> {
     public Point2D(double r, double theta, AngleUnit angleUnit) {
         this(r, angleUnit.convertTo(AngleUnit.RADIANS).apply(theta), CoordinateSystem2D.POLAR);
     }
-    public Point2D(math.Vector2D vector) {
+    public Point2D(Vector2D vector) {
         super(vector);
     }
 

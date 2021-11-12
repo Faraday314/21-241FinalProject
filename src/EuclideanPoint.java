@@ -1,6 +1,6 @@
 import static java.lang.Math.sqrt;
 
-public abstract class EuclideanPoint<P extends EuclideanPoint<P,V>, V extends math.EuclideanVector<V>> implements math.Point<P,V> {
+public abstract class EuclideanPoint<P extends EuclideanPoint<P,V>, V extends EuclideanVector<V>> implements Point<P,V> {
 
     protected final V pointVector;
     public EuclideanPoint(V pointVector) {
@@ -25,7 +25,7 @@ public abstract class EuclideanPoint<P extends EuclideanPoint<P,V>, V extends ma
     }
 
     @Override
-    public double distanceTo(math.Line<P,V> line) {
+    public double distanceTo(Line<P,V> line) {
         return line.distanceTo((P) this);
     }
 

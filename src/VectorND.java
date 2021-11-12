@@ -1,4 +1,4 @@
-public class VectorND extends math.EuclideanVector<VectorND> {
+public class VectorND extends EuclideanVector<VectorND> {
 
     public VectorND(MatrixSimple matrixVector) {
         super(matrixVector);

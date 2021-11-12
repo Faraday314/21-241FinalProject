@@ -1,4 +1,4 @@
-import org.jetbrains.annotations.NotNull;
+import com.sun.istack.internal.NotNull;
 
 public class SymmetricMatrix extends MatrixSimple {
     public SymmetricMatrix(MatrixSimple matrix) {

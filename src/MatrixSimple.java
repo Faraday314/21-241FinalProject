@@ -1,13 +1,13 @@
-import config_testing.HALMathUtil;
-import org.jetbrains.annotations.NotNull;
+
+import com.sun.istack.internal.NotNull;
 
 import java.util.*;
 
-import static java.lang.Math.max;
-import static java.lang.Math.pow;
+import static java.lang.Math.*;
+
 
 /**
- * A matrix class for doing matrix math.
+ * A matrix class for doing matrix 
  *
  * Creation Date: 5/27/20
  *
@@ -34,7 +34,7 @@ public class MatrixSimple {
             return;
         }
 
-        for(double[] row : vals) math.ExceptionChecker.assertTrue(row.length == vals[0].length, new RuntimeException("Entered rows in matrix must all be the same length."));
+        for(double[] row : vals) ExceptionChecker.assertTrue(row.length == vals[0].length, new RuntimeException("Entered rows in matrix must all be the same length."));
         this.vals = vals.clone();
     }
 
@@ -65,10 +65,10 @@ public class MatrixSimple {
      * @throws RuntimeException Throws this exception if the row index isn't within the range [0, getNumRows()) or the column index isn't within the range [0, getNumCols()).
      */
     public void set(int row, int col, double value) {
-        math.ExceptionChecker.assertTrue(row < getNumRows(), new RuntimeException("Cannot set an entry in a row outside the matrix."));
-        math.ExceptionChecker.assertTrue(row >= 0, new RuntimeException("Cannot set an entry in a negative row."));
-        math.ExceptionChecker.assertTrue(col < getNumCols(), new RuntimeException("Cannot set an entry in a column outside the matrix."));
-        math.ExceptionChecker.assertTrue(col >= 0, new RuntimeException("Cannot set an entry in a negative column."));
+        ExceptionChecker.assertTrue(row < getNumRows(), new RuntimeException("Cannot set an entry in a row outside the matrix."));
+        ExceptionChecker.assertTrue(row >= 0, new RuntimeException("Cannot set an entry in a negative row."));
+        ExceptionChecker.assertTrue(col < getNumCols(), new RuntimeException("Cannot set an entry in a column outside the matrix."));
+        ExceptionChecker.assertTrue(col >= 0, new RuntimeException("Cannot set an entry in a negative column."));
 
         vals[row][col] = value;
     }
@@ -82,10 +82,10 @@ public class MatrixSimple {
      * @throws RuntimeException Throws this exception if the row index isn't within the range [0, getNumRows()) or the column index isn't within the range [0, getNumCols()).
      */
     public double get(int row, int col) {
-        math.ExceptionChecker.assertTrue(row < getNumRows(), new RuntimeException("Cannot get an entry in a row outside the matrix."));
-        math.ExceptionChecker.assertTrue(row >= 0, new RuntimeException("Cannot get an entry in a negative row."));
-        math.ExceptionChecker.assertTrue(col < getNumCols(), new RuntimeException("Cannot get an entry in a column outside the matrix."));
-        math.ExceptionChecker.assertTrue(col >= 0, new RuntimeException("Cannot get an entry in a negative column."));
+        ExceptionChecker.assertTrue(row < getNumRows(), new RuntimeException("Cannot get an entry in a row outside the matrix."));
+        ExceptionChecker.assertTrue(row >= 0, new RuntimeException("Cannot get an entry in a negative row."));
+        ExceptionChecker.assertTrue(col < getNumCols(), new RuntimeException("Cannot get an entry in a column outside the matrix."));
+        ExceptionChecker.assertTrue(col >= 0, new RuntimeException("Cannot get an entry in a negative column."));
 
         return vals[row][col];
     }
@@ -98,8 +98,8 @@ public class MatrixSimple {
      * @throws RuntimeException Throws this exception if the row index isn't within the range [0, getNumRows()).
      */
     public double[] getRowArray(int row) {
-        math.ExceptionChecker.assertTrue(row < getNumRows(), new RuntimeException("Cannot get an entry in a row outside the matrix."));
-        math.ExceptionChecker.assertTrue(row >= 0, new RuntimeException("Cannot get an entry in a negative row."));
+        ExceptionChecker.assertTrue(row < getNumRows(), new RuntimeException("Cannot get an entry in a row outside the matrix."));
+        ExceptionChecker.assertTrue(row >= 0, new RuntimeException("Cannot get an entry in a negative row."));
 
         return vals[row].clone();
     }
@@ -112,8 +112,8 @@ public class MatrixSimple {
      * @throws RuntimeException Throws this exception if the row index isn't within the range [0, getNumCols()).
      */
     public double[] getColArray(int col) {
-        math.ExceptionChecker.assertTrue(col < getNumCols(), new RuntimeException("Cannot get an entry in a column outside the matrix."));
-        math.ExceptionChecker.assertTrue(col >= 0, new RuntimeException("Cannot get an entry in a negative column."));
+        ExceptionChecker.assertTrue(col < getNumCols(), new RuntimeException("Cannot get an entry in a column outside the matrix."));
+        ExceptionChecker.assertTrue(col >= 0, new RuntimeException("Cannot get an entry in a negative column."));
 
         double[] colArray = new double[getNumRows()];
         for (int row = 0; row < getNumRows(); row++) colArray[row] = get(row, col);
@@ -121,8 +121,8 @@ public class MatrixSimple {
     }
 
     public MatrixSimple getCol(int col) {
-        math.ExceptionChecker.assertTrue(col < getNumCols(), new RuntimeException("Cannot get an entry in a column outside the matrix."));
-        math.ExceptionChecker.assertTrue(col >= 0, new RuntimeException("Cannot get an entry in a negative column."));
+        ExceptionChecker.assertTrue(col < getNumCols(), new RuntimeException("Cannot get an entry in a column outside the matrix."));
+        ExceptionChecker.assertTrue(col >= 0, new RuntimeException("Cannot get an entry in a negative column."));
 
         MatrixSimple column = MatrixSimple.zeroMatrix(getNumRows(), 1);
         for (int row = 0; row < getNumRows(); row++) column.set(row, 0, get(row, col));
@@ -176,7 +176,7 @@ public class MatrixSimple {
      * @throws RuntimeException Throws this exception if the length of the new row does not match the length of the old row.
      */
     public void setRow(int rowNum, double[] row) {
-        math.ExceptionChecker.assertTrue(row.length == getNumCols(), new RuntimeException("New row length does not match matrix row length."));
+        ExceptionChecker.assertTrue(row.length == getNumCols(), new RuntimeException("New row length does not match matrix row length."));
         vals[rowNum] = row;
     }
 
@@ -188,7 +188,7 @@ public class MatrixSimple {
      * @throws RuntimeException Throws this exception if the length of the new column does not match the length of the old column.
      */
     public void setCol(int colNum, double[] col) {
-        math.ExceptionChecker.assertTrue(col.length == getNumRows(), new RuntimeException("New column length does not match matrix column length."));
+        ExceptionChecker.assertTrue(col.length == getNumRows(), new RuntimeException("New column length does not match matrix column length."));
         for (int i = 0; i < getNumRows(); i++) set(i, colNum, col[i]);
     }
 
@@ -248,7 +248,7 @@ public class MatrixSimple {
      * @return Whether the matrix is a diagonal matrix.
      */
     public boolean isDiagonal() {
-        math.ExceptionChecker.assertTrue(isSquare(), new ArithmeticException("Matrix is not square."));
+        ExceptionChecker.assertTrue(isSquare(), new ArithmeticException("Matrix is not square."));
         for (int row = 0; row < getNumRows(); row++) {
             for (int col = 0; col < getNumCols(); col++) {
                 if(row != col && get(row, col) != 0) {
@@ -292,7 +292,7 @@ public class MatrixSimple {
      * @return The trace of this matrix.
      */
     public double trace() {
-        math.ExceptionChecker.assertTrue(isSquare(), new RuntimeException("Matrix is not square"));
+        ExceptionChecker.assertTrue(isSquare(), new RuntimeException("Matrix is not square"));
 
         double trace = 0;
         for (int diag = 0; diag < getNumRows(); diag++) {
@@ -339,7 +339,7 @@ public class MatrixSimple {
      * @throws RuntimeException Throws this exception when the matrix is not square.
      */
     public double determinant() {
-        math.ExceptionChecker.assertTrue(isSquare(), new RuntimeException("Is not a square matrix"));
+        ExceptionChecker.assertTrue(isSquare(), new RuntimeException("Is not a square matrix"));
         return determinant(this);
     }
 
@@ -391,11 +391,11 @@ public class MatrixSimple {
 
 
     public MatrixSimple invert() {
-        math.ExceptionChecker.assertTrue(isSquare(), new RuntimeException("Is not a square matrix"));
+        ExceptionChecker.assertTrue(isSquare(), new RuntimeException("Is not a square matrix"));
         MatrixSimple inverseFinderRREF = this.augment(MatrixSimple.identityMatrix(getNumRows())).rref();
         MatrixSimple potentialIdentity = inverseFinderRREF.crop(0, getNumRows(), 0, getNumCols());
         potentialIdentity = potentialIdentity.round(7);
-        math.ExceptionChecker.assertTrue(potentialIdentity.isIdentityMatrix(), new RuntimeException("Matrix is not invertible!"));
+        ExceptionChecker.assertTrue(potentialIdentity.isIdentityMatrix(), new RuntimeException("Matrix is not invertible!"));
         return inverseFinderRREF.crop(0, getNumRows(), getNumCols(), 2*getNumCols());
     }
 
@@ -423,7 +423,7 @@ public class MatrixSimple {
      * @throws RuntimeException Throws this exception when this matrix cannot be multiplied by the given matrix.
      */
     public MatrixSimple multiply(MatrixSimple matrix) {
-        math.ExceptionChecker.assertTrue(this.getNumCols() == matrix.getNumRows(), new RuntimeException("Cannot multiply given matrices, invalid dimensions."));
+        ExceptionChecker.assertTrue(this.getNumCols() == matrix.getNumRows(), new RuntimeException("Cannot multiply given matrices, invalid dimensions."));
 
         double[][] multipliedMatrix = new double[getNumRows()][matrix.getNumCols()];
         for (int rowNum = 0; rowNum < getNumRows(); rowNum++) {
@@ -448,12 +448,12 @@ public class MatrixSimple {
      * @throws ArithmeticException Throws this exception if you try to divide by 0.
      */
     public MatrixSimple divide(double value) {
-        math.ExceptionChecker.assertFalse(value == 0, new ArithmeticException("Divide by zero error."));
+        ExceptionChecker.assertFalse(value == 0, new ArithmeticException("Divide by zero error."));
         return multiply(1.0 / value);
     }
 
     public MatrixSimple add(MatrixSimple matrix) {
-        math.ExceptionChecker.assertTrue(matrix.getNumCols() == this.getNumCols() && matrix.getNumRows() == this.getNumRows(), new RuntimeException("Matrices must be the same size!"));
+        ExceptionChecker.assertTrue(matrix.getNumCols() == this.getNumCols() && matrix.getNumRows() == this.getNumRows(), new RuntimeException("Matrices must be the same size!"));
         double[][] sumVals = new double[getNumRows()][getNumCols()];
         for (int row = 0; row < getNumRows(); row++) {
             for (int col = 0; col < getNumCols(); col++) {
@@ -505,13 +505,13 @@ public class MatrixSimple {
         LUFactorization luFactorization = this.LUFactorization();
         MatrixSimple rref = luFactorization.U.round(7);
 
-        for (int pivot = Math.min(getNumRows(), getNumCols())-1; pivot >= 0; pivot--) {
+        for (int pivot = min(getNumRows(), getNumCols())-1; pivot >= 0; pivot--) {
             double pivotVal = rref.vals[pivot][pivot];
 
             if(HALMathUtil.round(pivotVal, 7) != 0) {
                 //Divide pivot row by pivot value to make the pivot 1.
                 double[] pivotRow = rref.getRowArray(pivot);
-                math.FakeNumpy.divide(pivotRow, pivotVal);
+                FakeNumpy.divide(pivotRow, pivotVal);
                 rref.setRow(pivot, pivotRow);
 
                 for (int row = 0; row < pivot; row++) {
@@ -565,7 +565,7 @@ public class MatrixSimple {
         List<MatrixSimple> columnSpaceBasis = new ArrayList<>();
         for (int row = 0; row < rref.getNumRows(); row++) {
             for (int col = 0; col < getNumCols(); col++) {
-                if(HALMathUtil.floatingPointFix(rref.get(row, col)) == 1) {
+                if(HALMathUtil.round(rref.get(row, col), 7) == 1) {
                     MatrixSimple basisVector = MatrixSimple.zeroMatrix(getNumRows(), 1);
                     for (int originalRow = 0; originalRow < getNumRows(); originalRow++) {
                         basisVector.set(originalRow, 0, get(originalRow, col));
@@ -592,7 +592,7 @@ public class MatrixSimple {
         MatrixSimple L = MatrixSimple.identityMatrix(this.getNumRows());
         MatrixSimple U = P.multiply(this);
 
-        for (int pivot = 0; pivot < Math.min(getNumRows(), getNumCols()); pivot++) {
+        for (int pivot = 0; pivot < min(getNumRows(), getNumCols()); pivot++) {
             double pivotVal = U.get(pivot, pivot);
 
             if(pivotVal == 0) {
@@ -641,8 +641,8 @@ public class MatrixSimple {
     }
 
     public static MatrixSimple givensRotationMatrix(int size, int modifyRow, int setRow, double c, double s)  {
-        math.ExceptionChecker.assertTrue(setRow >= 1, new ArithmeticException("Givens' rotation can't cancel anything on row 0."));
-        math.ExceptionChecker.assertTrue(modifyRow < setRow, new ArithmeticException("Givens' rotation secondary modified row must be before the main modified row."));
+        ExceptionChecker.assertTrue(setRow >= 1, new ArithmeticException("Givens' rotation can't cancel anything on row 0."));
+        ExceptionChecker.assertTrue(modifyRow < setRow, new ArithmeticException("Givens' rotation secondary modified row must be before the main modified row."));
         MatrixSimple givensRotationMatrix = MatrixSimple.identityMatrix(size);
 
         givensRotationMatrix.set(modifyRow, modifyRow, c);
@@ -669,7 +669,7 @@ public class MatrixSimple {
 
                 double b = R.get(row - 1, col);
 
-                double r = Math.hypot(a, b);
+                double r = hypot(a, b);
 
                 double c = b / r;
                 double s = -a / r;
@@ -687,7 +687,7 @@ public class MatrixSimple {
     }
 
     public double[] eigenvalues() {
-        math.ExceptionChecker.assertTrue(this.isSquare(), new RuntimeException("Matrix must be square!"));
+        ExceptionChecker.assertTrue(this.isSquare(), new RuntimeException("Matrix must be square!"));
 
         MatrixSimple A = getEigenvalueDiagonalMatrix();
 
@@ -742,20 +742,20 @@ public class MatrixSimple {
     }
 
     public MatrixSimple[] eigenvectors() {
-        math.ExceptionChecker.assertTrue(this.isSquare(), new RuntimeException("Matrix must be square!"));
+        ExceptionChecker.assertTrue(this.isSquare(), new RuntimeException("Matrix must be square!"));
         MatrixSimple eigenvalues = getEigenvalueDiagonalMatrix();
         return eigenvectorsFromLambda(eigenvalues);
     }
 
     public EigenData eigen() {
-        math.ExceptionChecker.assertTrue(this.isSquare(), new RuntimeException("Matrix must be square!"));
+        ExceptionChecker.assertTrue(this.isSquare(), new RuntimeException("Matrix must be square!"));
 
-        math.ExceptionChecker.assertTrue(this.isSquare(), new RuntimeException("Matrix must be square!"));
+        ExceptionChecker.assertTrue(this.isSquare(), new RuntimeException("Matrix must be square!"));
 
         MatrixSimple lambda = getEigenvalueDiagonalMatrix();
         MatrixSimple[] eigenvectors = eigenvectorsFromLambda(lambda);
 
-        math.ExceptionChecker.assertTrue(eigenvectors.length > 0, new ArithmeticException("Something has gone wrong, there were no eigenvectors."));
+        ExceptionChecker.assertTrue(eigenvectors.length > 0, new ArithmeticException("Something has gone wrong, there were no eigenvectors."));
 
         MatrixSimple eigenbasis = eigenvectors[0];
         for (int i = 1; i < eigenvectors.length; i++) {
@@ -770,7 +770,7 @@ public class MatrixSimple {
     }
 
     public Diagonalization diagonalize() {
-        math.ExceptionChecker.assertTrue(isSquare(), new ArithmeticException("Matrix is not square."));
+        ExceptionChecker.assertTrue(isSquare(), new ArithmeticException("Matrix is not square."));
         //ExceptionChecker.assertTrue(isDiagonalizable(), new ArithmeticException("Matrix is not diagonalizable."));
 
         EigenData eigenData = eigen();
@@ -824,13 +824,13 @@ public class MatrixSimple {
         return getNumCols() == 1;
     }
 
-    public math.VectorND toVector() {
-        math.ExceptionChecker.assertTrue(isVector(), new ArithmeticException("matrix is not a vector."));
-        return new math.VectorND(this);
+    public VectorND toVector() {
+        ExceptionChecker.assertTrue(isVector(), new ArithmeticException("matrix is not a vector."));
+        return new VectorND(this);
     }
 
     public MatrixSimple round(int places) {
-        math.ExceptionChecker.assertTrue(places >= 0, new ArithmeticException("You cannot have negative decimal places."));
+        ExceptionChecker.assertTrue(places >= 0, new ArithmeticException("You cannot have negative decimal places."));
 
         MatrixSimple rounded = copy();
 
@@ -856,7 +856,7 @@ public class MatrixSimple {
 
     @NotNull
     public static MatrixSimple identityMatrix(int size) {
-        math.ExceptionChecker.assertTrue(size > 0, new RuntimeException("An identity matrix must be at least 1x1"));
+        ExceptionChecker.assertTrue(size > 0, new RuntimeException("An identity matrix must be at least 1x1"));
         double[][] identityVals = new double[size][size];
         for (int diag = 0; diag < size; diag++) {
             identityVals[diag][diag] = 1;
@@ -875,8 +875,8 @@ public class MatrixSimple {
      */
     @NotNull
     public static MatrixSimple zeroMatrix(int rows, int cols) {
-        math.ExceptionChecker.assertTrue(rows > 0, new RuntimeException("Can't have 0 or negative amount of rows."));
-        math.ExceptionChecker.assertTrue(cols > 0, new RuntimeException("Can't have 0 or negative amount of columns."));
+        ExceptionChecker.assertTrue(rows > 0, new RuntimeException("Can't have 0 or negative amount of rows."));
+        ExceptionChecker.assertTrue(cols > 0, new RuntimeException("Can't have 0 or negative amount of columns."));
 
         return new MatrixSimple(new double[rows][cols]);
     }
@@ -891,8 +891,8 @@ public class MatrixSimple {
      */
     @NotNull
     public static MatrixSimple onesMatrix(int rows, int cols) {
-        math.ExceptionChecker.assertTrue(rows > 0, new RuntimeException("Can't have 0 or negative amount of rows."));
-        math.ExceptionChecker.assertTrue(cols > 0, new RuntimeException("Can't have 0 or negative amount of columns."));
+        ExceptionChecker.assertTrue(rows > 0, new RuntimeException("Can't have 0 or negative amount of rows."));
+        ExceptionChecker.assertTrue(cols > 0, new RuntimeException("Can't have 0 or negative amount of columns."));
 
         double[][] onesVals = new double[rows][cols];
         for (int row = 0; row < rows; row++) {
@@ -928,8 +928,8 @@ public class MatrixSimple {
 
         private final String eigenvectorString;
         protected EigenData(MatrixSimple diagEigenvalueMatrix, @NotNull MatrixSimple eigenVectorMatrix) {
-            math.ExceptionChecker.assertTrue(diagEigenvalueMatrix.round(7).isDiagonal(), new ArithmeticException("Matrix not diagonal"));
-            math.ExceptionChecker.assertTrue(eigenVectorMatrix.isSquare(), new ArithmeticException("Matrix not square"));
+            ExceptionChecker.assertTrue(diagEigenvalueMatrix.round(7).isDiagonal(), new ArithmeticException("Matrix not diagonal"));
+            ExceptionChecker.assertTrue(eigenVectorMatrix.isSquare(), new ArithmeticException("Matrix not square"));
 
             this.eigenbasis = eigenVectorMatrix;
 
@@ -957,13 +957,13 @@ public class MatrixSimple {
         public final MatrixSimple X, lambda;
         private final MatrixSimple Xinv;
         private Diagonalization(MatrixSimple X, MatrixSimple lambda) {
-            math.ExceptionChecker.assertTrue(lambda.isDiagonal(), new ArithmeticException("Matrix must be diagonal"));
+            ExceptionChecker.assertTrue(lambda.isDiagonal(), new ArithmeticException("Matrix must be diagonal"));
 
             /*
             for (MatrixSimple vector : X.getCols()) {
                 double max = -Double.MAX_VALUE;
                 for (int row = 0; row < vector.getNumRows(); row++) {
-                    max = Math.max(vector.get(row, 0), max);
+                    max = max(vector.get(row, 0), max);
                 }
                 for (int row = 0; row < vector.getNumRows(); row++) {
                     vector.set(row, 0, vector.get(row, 0)/max);
@@ -984,7 +984,7 @@ public class MatrixSimple {
         }
 
         public MatrixSimple fastPow(int exponent) {
-            math.ExceptionChecker.assertTrue(exponent > 0, new ArithmeticException("matrix exponent must be an integer"));
+            ExceptionChecker.assertTrue(exponent > 0, new ArithmeticException("matrix exponent must be an integer"));
 
             MatrixSimple lambdaPow = lambda.copy();
             for (int diag = 0; diag < lambdaPow.getNumRows(); diag++) {
