@@ -1,3 +1,5 @@
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Arrays;
 
 import static java.lang.Math.*;
@@ -5,7 +7,7 @@ import static java.lang.Math.*;
 public abstract class EuclideanVector<V extends EuclideanVector<V>> implements Vector<V>{
     protected final MatrixSimple vectorMatrix;
 
-    public EuclideanVector(MatrixSimple vectorMatrix) {
+    public EuclideanVector(@NotNull MatrixSimple vectorMatrix) {
         ExceptionChecker.assertTrue(vectorMatrix.isVector(), new ArithmeticException("Matrix is not a vector."));
         this.vectorMatrix = vectorMatrix;
     }
@@ -15,12 +17,12 @@ public abstract class EuclideanVector<V extends EuclideanVector<V>> implements V
     }
 
     @Override
-    public V set(V vector) {
+    public V set(@NotNull V vector) {
         return set(vector.vectorMatrix);
     }
 
     @Override
-    public V set(MatrixSimple vectorMatrix) {
+    public V set(@NotNull MatrixSimple vectorMatrix) {
         ExceptionChecker.assertTrue(vectorMatrix.isVector(), new ArithmeticException("matrix is not a vector."));
         ExceptionChecker.assertEqual(dim(), vectorMatrix.getNumRows(), new ArithmeticException("dimensionality of vectors does not match."));
 
@@ -36,7 +38,7 @@ public abstract class EuclideanVector<V extends EuclideanVector<V>> implements V
     }
 
     @Override
-    public final double[] getComponents() {
+    public final double @NotNull [] getComponents() {
         double[] components = new double[vectorMatrix.getNumRows()];
         for (int row = 0; row < vectorMatrix.getNumRows(); row++) {
             components[row] = vectorMatrix.get(row, 0);
@@ -48,7 +50,7 @@ public abstract class EuclideanVector<V extends EuclideanVector<V>> implements V
         return vectorMatrix.isZeroMatrix();
     }
 
-    public final double dot(V vector) {
+    public final double dot(@NotNull V vector) {
         return vectorMatrix.transpose().multiply(vector.vectorMatrix).get(0, 0);
     }
 
@@ -62,9 +64,13 @@ public abstract class EuclideanVector<V extends EuclideanVector<V>> implements V
         return this.dot(vector) == 0;
     }
 
+    public final double magnitudeSquared() {
+        return this.dot((V) this);
+    }
+
     @Override
     public final double magnitude() {
-        return sqrt(this.dot((V) this));
+        return sqrt(magnitudeSquared());
     }
 
     @Override
@@ -106,19 +112,19 @@ public abstract class EuclideanVector<V extends EuclideanVector<V>> implements V
         return multiply(-1);
     }
 
-    public V add(V vector) {
+    public V add(@NotNull V vector) {
         return copy().set(vectorMatrix.add(vector.vectorMatrix));
     }
 
-    public V subtract(V vector) {
+    public V subtract(@NotNull V vector) {
         return copy().set(vectorMatrix.subtract(vector.vectorMatrix));
     }
 
-    public V project(V ontoVector) {
+    public V project(@NotNull V ontoVector) {
         return ontoVector.multiply(this.dot(ontoVector)/ontoVector.dot(ontoVector));
     }
 
-    public V rotate(Axis<V> u, Axis<V> v, double angle, AngleUnit angleUnit) {
+    public V rotate(@NotNull Axis<V> u, @NotNull Axis<V> v, double angle, @NotNull AngleUnit angleUnit) {
         ExceptionChecker.assertTrue(u.getAxisVector().isNormalTo(v.getAxisVector()), new RuntimeException("Vectors defining the rotation object must be orthonormal."));
 
         MatrixSimple uMatrix = u.getAxisVector().toMatrix();

@@ -1,5 +1,4 @@
-
-import com.sun.istack.internal.NotNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -19,8 +18,11 @@ import static java.lang.Math.*;
  */
 public class MatrixSimple {
 
+    protected static final int DECIMAL_ACCURACY = 7;
+
     //The double array matrix of values contained in the matrix.
     protected final double[][] vals;
+
 
     /**
      * A constructor for matrix where individual arrays of doubles can be entered or a matrix of doubles can be entered.
@@ -38,16 +40,12 @@ public class MatrixSimple {
         this.vals = vals.clone();
     }
 
-    public MatrixSimple(int rows, int cols) {
-        this.vals = new double[rows][cols];
-    }
-
     /**
      * A private constructor for matrix used for cloning.
      *
      * @param matrix The matrix to clone.
      */
-    private MatrixSimple(MatrixSimple matrix) {
+    private MatrixSimple(@NotNull MatrixSimple matrix) {
         vals = new double[matrix.getNumRows()][matrix.getNumCols()];
         for (int i = 0; i < matrix.getNumRows(); i++) System.arraycopy(matrix.vals[i], 0, vals[i], 0, vals[i].length);
     }
@@ -175,9 +173,14 @@ public class MatrixSimple {
      * @param row The row to add at that row index.
      * @throws RuntimeException Throws this exception if the length of the new row does not match the length of the old row.
      */
-    public void setRow(int rowNum, double[] row) {
+    public void setRowArray(int rowNum, double @NotNull [] row) {
         ExceptionChecker.assertTrue(row.length == getNumCols(), new RuntimeException("New row length does not match matrix row length."));
         vals[rowNum] = row;
+    }
+
+    public void setRow(int rowNum, @NotNull MatrixSimple row) {
+        ExceptionChecker.assertTrue(row.getNumRows() == 1, new ArithmeticException("Matrix is not a row matrix."));
+        setRowArray(rowNum, row.getRowArray(0));
     }
 
     /**
@@ -187,9 +190,14 @@ public class MatrixSimple {
      * @param col The column to add at that column index.
      * @throws RuntimeException Throws this exception if the length of the new column does not match the length of the old column.
      */
-    public void setCol(int colNum, double[] col) {
+    public void setColArray(int colNum, double @NotNull [] col) {
         ExceptionChecker.assertTrue(col.length == getNumRows(), new RuntimeException("New column length does not match matrix column length."));
         for (int i = 0; i < getNumRows(); i++) set(i, colNum, col[i]);
+    }
+
+    public void setCol(int colNum, @NotNull MatrixSimple col) {
+        ExceptionChecker.assertTrue(col.isVector(), new ArithmeticException("Matrix is not a column matrix."));
+        setRowArray(colNum, col.getColArray(0));
     }
 
     /**
@@ -204,7 +212,7 @@ public class MatrixSimple {
         boolean isZeroMatrix = true;
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
-                isZeroMatrix &= HALMathUtil.round(get(row, col), 7) == 0;
+                isZeroMatrix &= HALMathUtil.round(get(row, col), DECIMAL_ACCURACY) == 0;
             }
         }
         return isZeroMatrix;
@@ -226,8 +234,8 @@ public class MatrixSimple {
             for (int col = 0; col < cols; col++) {
                 double val = get(row, col);
 
-                if (row == col) isIdentity &= HALMathUtil.round(val, 7) == 1;
-                else isIdentity &= HALMathUtil.round(val, 7) == 0;
+                if (row == col) isIdentity &= HALMathUtil.round(val, DECIMAL_ACCURACY) == 1;
+                else isIdentity &= HALMathUtil.round(val, DECIMAL_ACCURACY) == 0;
             }
         }
         return isIdentity;
@@ -251,7 +259,7 @@ public class MatrixSimple {
         ExceptionChecker.assertTrue(isSquare(), new ArithmeticException("Matrix is not square."));
         for (int row = 0; row < getNumRows(); row++) {
             for (int col = 0; col < getNumCols(); col++) {
-                if(row != col && get(row, col) != 0) {
+                if(row != col && HALMathUtil.round(get(row, col), DECIMAL_ACCURACY) != 0) {
                     return false;
                 }
             }
@@ -301,7 +309,7 @@ public class MatrixSimple {
         return trace;
     }
 
-    public MatrixSimple augment(MatrixSimple matrix) {
+    public MatrixSimple augment(@NotNull MatrixSimple matrix) {
         double[][] newVals = new double[max(getNumRows(),matrix.getNumRows())][getNumCols()+matrix.getNumCols()];
         for (int row = 0; row < getNumRows(); row++) {
             if (getNumCols() >= 0) System.arraycopy(vals[row], 0, newVals[row], 0, getNumCols());
@@ -316,7 +324,7 @@ public class MatrixSimple {
         return new MatrixSimple(newVals);
     }
 
-    public MatrixSimple augmentVertical(MatrixSimple matrix) {
+    public MatrixSimple augmentVertical(@NotNull MatrixSimple matrix) {
         double[][] newVals = new double[getNumRows()+matrix.getNumRows()][max(getNumCols(),matrix.getNumCols())];
 
         for (int row = 0; row < getNumRows(); row++) {
@@ -340,61 +348,24 @@ public class MatrixSimple {
      */
     public double determinant() {
         ExceptionChecker.assertTrue(isSquare(), new RuntimeException("Is not a square matrix"));
-        return determinant(this);
-    }
+        LUFactorization lu = LUFactorization();
+        int size = getNumRows();
 
-    private double determinant(MatrixSimple subMatrix) {
-
-        //if the sub-matrix is 2x2
-        if(subMatrix.getNumRows() == 2) {
-            return subMatrix.get(0,0)* subMatrix.get(1,1) - subMatrix.get(0,1)*subMatrix.get(1,0);
+        double det = 1;
+        for (int diag = 0; diag < size; diag++) {
+            if(lu.P.get(diag, diag) != 1) det *= -1;
+            det *= lu.L.get(diag, diag);
+            det *= lu.U.get(diag, diag);
         }
 
-        //Reminder: The matrix is square so getNumRows == getNumCols
-        double[] zeroEntry = new double[subMatrix.getNumRows()];
-        double determinantSum = 0;
-        for (int col = 0; col < subMatrix.getNumCols(); col++) {
-            double selectedVal = subMatrix.vals[0][col];
-
-            MatrixSimple mask = MatrixSimple.onesMatrix(subMatrix.getNumRows(),subMatrix.getNumCols());
-            mask.setRow(0, zeroEntry);
-            mask.setCol(col, zeroEntry);
-
-            MatrixSimple maskedSubMatrix = subMatrix.mask(mask);
-            double[][] subMatrixVals = new double[subMatrix.getNumRows()-1][subMatrix.getNumCols()-1];
-            int totalRowsFilled = 0, totalColsFilled;
-            for (int subRow = 0; subRow < maskedSubMatrix.getNumRows(); subRow++) {
-                if(subRow == 0) continue;
-
-                totalColsFilled = 0;
-                for (int subCol = 0; subCol < maskedSubMatrix.getNumCols(); subCol++) {
-                    if(subCol != col) {
-                        subMatrixVals[totalRowsFilled][totalColsFilled] = maskedSubMatrix.vals[subRow][subCol];
-                        totalColsFilled++;
-                    }
-                }
-                totalRowsFilled++;
-            }
-
-            MatrixSimple newSubMatrix = new MatrixSimple(subMatrixVals);
-            double det = determinant(newSubMatrix);
-            if(col % 2 == 0) {
-                determinantSum += selectedVal * det;
-            }
-            else {
-                determinantSum -= selectedVal * det;
-            }
-        }
-
-        return determinantSum;
+        return det;
     }
-
 
     public MatrixSimple invert() {
         ExceptionChecker.assertTrue(isSquare(), new RuntimeException("Is not a square matrix"));
         MatrixSimple inverseFinderRREF = this.augment(MatrixSimple.identityMatrix(getNumRows())).rref();
         MatrixSimple potentialIdentity = inverseFinderRREF.crop(0, getNumRows(), 0, getNumCols());
-        potentialIdentity = potentialIdentity.round(7);
+        potentialIdentity = potentialIdentity.round(DECIMAL_ACCURACY);
         ExceptionChecker.assertTrue(potentialIdentity.isIdentityMatrix(), new RuntimeException("Matrix is not invertible!"));
         return inverseFinderRREF.crop(0, getNumRows(), getNumCols(), 2*getNumCols());
     }
@@ -422,7 +393,7 @@ public class MatrixSimple {
      * @return This matrix.
      * @throws RuntimeException Throws this exception when this matrix cannot be multiplied by the given matrix.
      */
-    public MatrixSimple multiply(MatrixSimple matrix) {
+    public MatrixSimple multiply(@NotNull MatrixSimple matrix) {
         ExceptionChecker.assertTrue(this.getNumCols() == matrix.getNumRows(), new RuntimeException("Cannot multiply given matrices, invalid dimensions."));
 
         double[][] multipliedMatrix = new double[getNumRows()][matrix.getNumCols()];
@@ -452,7 +423,7 @@ public class MatrixSimple {
         return multiply(1.0 / value);
     }
 
-    public MatrixSimple add(MatrixSimple matrix) {
+    public MatrixSimple add(@NotNull MatrixSimple matrix) {
         ExceptionChecker.assertTrue(matrix.getNumCols() == this.getNumCols() && matrix.getNumRows() == this.getNumRows(), new RuntimeException("Matrices must be the same size!"));
         double[][] sumVals = new double[getNumRows()][getNumCols()];
         for (int row = 0; row < getNumRows(); row++) {
@@ -464,7 +435,7 @@ public class MatrixSimple {
         return new MatrixSimple(sumVals);
     }
 
-    public MatrixSimple subtract(MatrixSimple matrix) {
+    public MatrixSimple subtract(@NotNull MatrixSimple matrix) {
         return this.add(matrix.multiply(-1));
     }
 
@@ -503,16 +474,16 @@ public class MatrixSimple {
      */
     public MatrixSimple rref() {
         LUFactorization luFactorization = this.LUFactorization();
-        MatrixSimple rref = luFactorization.U.round(7);
+        MatrixSimple rref = luFactorization.U.round(DECIMAL_ACCURACY);
 
         for (int pivot = min(getNumRows(), getNumCols())-1; pivot >= 0; pivot--) {
             double pivotVal = rref.vals[pivot][pivot];
 
-            if(HALMathUtil.round(pivotVal, 7) != 0) {
+            if(HALMathUtil.round(pivotVal, DECIMAL_ACCURACY) != 0) {
                 //Divide pivot row by pivot value to make the pivot 1.
                 double[] pivotRow = rref.getRowArray(pivot);
                 FakeNumpy.divide(pivotRow, pivotVal);
-                rref.setRow(pivot, pivotRow);
+                rref.setRowArray(pivot, pivotRow);
 
                 for (int row = 0; row < pivot; row++) {
                     double elimVal = rref.vals[row][pivot];
@@ -530,7 +501,7 @@ public class MatrixSimple {
         for (int row = 0; row < rref.getNumRows(); row++) {
             boolean isZeroRow = true;
             for (int col = 0; col < rref.getNumCols(); col++) {
-                if(HALMathUtil.round(rref.get(row, col), 7) != 0) {
+                if(HALMathUtil.round(rref.get(row, col), DECIMAL_ACCURACY) != 0) {
                     isZeroRow = false;
                     break;
                 }
@@ -539,8 +510,8 @@ public class MatrixSimple {
             if(reachedZeroRow && !isZeroRow) {
                 double[] nonZeroRow = rref.getRowArray(row);
                 double[] zeroRow = rref.getRowArray(row-1);
-                rref.setRow(row, zeroRow);
-                rref.setRow(row-1, nonZeroRow);
+                rref.setRowArray(row, zeroRow);
+                rref.setRowArray(row-1, nonZeroRow);
             }
         }
 
@@ -565,7 +536,7 @@ public class MatrixSimple {
         List<MatrixSimple> columnSpaceBasis = new ArrayList<>();
         for (int row = 0; row < rref.getNumRows(); row++) {
             for (int col = 0; col < getNumCols(); col++) {
-                if(HALMathUtil.round(rref.get(row, col), 7) == 1) {
+                if(HALMathUtil.round(rref.get(row, col), DECIMAL_ACCURACY) == 1) {
                     MatrixSimple basisVector = MatrixSimple.zeroMatrix(getNumRows(), 1);
                     for (int originalRow = 0; originalRow < getNumRows(); originalRow++) {
                         basisVector.set(originalRow, 0, get(originalRow, col));
@@ -588,7 +559,7 @@ public class MatrixSimple {
         return transpose().nullSpace();
     }
 
-    private LUFactorization LUFactorization(MatrixSimple P) {
+    private @NotNull LUFactorization LUFactorization(@NotNull MatrixSimple P) {
         MatrixSimple L = MatrixSimple.identityMatrix(this.getNumRows());
         MatrixSimple U = P.multiply(this);
 
@@ -612,8 +583,8 @@ public class MatrixSimple {
                 double[] pivotRow = permutation.getRowArray(pivot);
                 double[] nonZeroRow = permutation.getRowArray(nonZeroRowIdx);
 
-                permutation.setRow(pivot, nonZeroRow);
-                permutation.setRow(nonZeroRowIdx, pivotRow);
+                permutation.setRowArray(pivot, nonZeroRow);
+                permutation.setRowArray(nonZeroRowIdx, pivotRow);
 
                 return LUFactorization(permutation.multiply(P));
             }
@@ -640,7 +611,7 @@ public class MatrixSimple {
         return LUFactorization(MatrixSimple.identityMatrix(this.getNumRows()));
     }
 
-    public static MatrixSimple givensRotationMatrix(int size, int modifyRow, int setRow, double c, double s)  {
+    public static @NotNull MatrixSimple givensRotationMatrix(int size, int modifyRow, int setRow, double c, double s)  {
         ExceptionChecker.assertTrue(setRow >= 1, new ArithmeticException("Givens' rotation can't cancel anything on row 0."));
         ExceptionChecker.assertTrue(modifyRow < setRow, new ArithmeticException("Givens' rotation secondary modified row must be before the main modified row."));
         MatrixSimple givensRotationMatrix = MatrixSimple.identityMatrix(size);
@@ -686,20 +657,55 @@ public class MatrixSimple {
         return new QRFactorization(Q, R);
     }
 
-    public double[] eigenvalues() {
+    public ComplexNumber[] eigenvaluesFull() {
         ExceptionChecker.assertTrue(this.isSquare(), new RuntimeException("Matrix must be square!"));
-
         MatrixSimple A = getEigenvalueDiagonalMatrix();
 
-        double[] eigenvalues = new double[A.getNumRows()];
-        for (int diag = 0; diag < A.getNumRows(); diag++) {
-            eigenvalues[diag] = A.get(diag, diag);
+        ComplexNumber[] eigenvalues = new ComplexNumber[A.getNumCols()];
+        final int cols = A.getNumCols();
+
+        for (int diag = 0; diag < cols; diag++) {
+            //Anything on the right subdiagonal?
+            if(diag+1 < cols && HALMathUtil.round(A.get(diag, diag+1), DECIMAL_ACCURACY) != 0) {
+                //YES THERE IS! COMPLEX NUMBERS ENGAGE!
+                final double a = A.get(diag, diag);
+                final double b = A.get(diag, diag+1);
+                final double c = A.get(diag+1, diag);
+                final double d = A.get(diag+1, diag+1);
+
+                ComplexNumber discriminant = ComplexNumber.fromReal((a+d)*(a+d)-4*(a*d-b*c));
+                ComplexNumber[] sqrtDiscriminants = ComplexNumber.safeSqrtFull(discriminant, DECIMAL_ACCURACY);
+
+                eigenvalues[diag] = ComplexNumber.fromReal(a+d).add(sqrtDiscriminants[0]).divide(2);
+                eigenvalues[diag+1] = ComplexNumber.fromReal(a+d).add(sqrtDiscriminants[1]).divide(2);
+
+                //To skip the next line and ensure we only count 2x2 blocks.
+                diag++;
+            }
+            else {
+                //No? Fine its a normal real number. Be boring, I get it.
+                eigenvalues[diag] = ComplexNumber.fromReal(A.get(diag, diag));
+            }
         }
 
         return eigenvalues;
     }
 
-    private MatrixSimple[] eigenvectorsFromLambda(MatrixSimple eigenvalues) {
+    public double[] eigenvalues() {
+        ExceptionChecker.assertTrue(this.isSquare(), new RuntimeException("Matrix must be square!"));
+
+        MatrixSimple A = getEigenvalueDiagonalMatrix();
+
+        ExceptionChecker.assertTrue(A.isDiagonal(), new ArithmeticException("Matrix eigenvalues are complex!"));
+
+        double[] eigenvalues = new double[A.getNumRows()];
+        for (int diag = 0; diag < A.getNumRows(); diag++) {
+            eigenvalues[diag] = A.get(diag, diag);
+        }
+        return eigenvalues;
+    }
+
+    private MatrixSimple @NotNull [] eigenvectorsFromLambda(@NotNull MatrixSimple eigenvalues) {
         Set<Double> usedEigenvalues = new LinkedHashSet<>();
         List<MatrixSimple> eigenvectors = new ArrayList<>();
         for(int diag = 0; diag < eigenvalues.getNumRows(); diag++) {
@@ -714,19 +720,29 @@ public class MatrixSimple {
         return eigenvectors.toArray(new MatrixSimple[0]);
     }
 
+
+    private double diagSquares(@NotNull MatrixSimple A) {
+        double val = 0;
+        for (int diag = 0; diag < A.getNumCols(); diag++) {
+            double diagElem = A.get(diag, diag);
+            val += diagElem*diagElem;
+        }
+        return val;
+    }
+
     private MatrixSimple getEigenvalueDiagonalMatrix() {
         QRFactorization qrFactorization = this.QRFactorization();
         MatrixSimple A = qrFactorization.R.multiply(qrFactorization.Q);
 
         MatrixSimple identity = MatrixSimple.identityMatrix(qrFactorization.Q.getNumRows());
 
-        while(!A.round(7).isDiagonal()) {
-
-            double s = A.get(getNumRows()-1, getNumRows()-1);
+        double previous = Double.MAX_VALUE;
+        while(abs(diagSquares(A)-previous) != 0) {
+            final double s = A.get(getNumRows()-1, getNumRows()-1);
             MatrixSimple smult = MatrixSimple.identityMatrix(A.getNumRows()).multiply(s);
 
+            previous = diagSquares(A);
             qrFactorization = A.subtract(smult).QRFactorization();
-
             A = qrFactorization.R.multiply(qrFactorization.Q).add(smult);
 
             //If matrix is already upper triangular
@@ -737,6 +753,7 @@ public class MatrixSimple {
                 A = identity;
                 break;
             }
+
         }
         return A;
     }
@@ -783,7 +800,7 @@ public class MatrixSimple {
         return new Diagonalization(eigenData.eigenbasis, lambda);
     }
 
-    private static int nullityFromQR(QRFactorization qr) {
+    private static int nullityFromQR(@NotNull QRFactorization qr) {
         int rows = qr.R.getNumRows();
         int cols = qr.R.getNumCols();
 
@@ -791,7 +808,7 @@ public class MatrixSimple {
         for (int row = rows-1; row >= 0; row--) {
             boolean isZeroRow = true;
             for (int col = 0; col < cols; col++) {
-                if(HALMathUtil.round(qr.R.get(row, col),7) != 0) {
+                if(HALMathUtil.round(qr.R.get(row, col), DECIMAL_ACCURACY) != 0) {
                     isZeroRow = false;
                     break;
                 }
@@ -927,8 +944,8 @@ public class MatrixSimple {
         public final MatrixSimple eigenbasis;
 
         private final String eigenvectorString;
-        protected EigenData(MatrixSimple diagEigenvalueMatrix, @NotNull MatrixSimple eigenVectorMatrix) {
-            ExceptionChecker.assertTrue(diagEigenvalueMatrix.round(7).isDiagonal(), new ArithmeticException("Matrix not diagonal"));
+        protected EigenData(@NotNull MatrixSimple diagEigenvalueMatrix, @NotNull MatrixSimple eigenVectorMatrix) {
+            ExceptionChecker.assertTrue(diagEigenvalueMatrix.isDiagonal(), new ArithmeticException("Matrix not diagonal"));
             ExceptionChecker.assertTrue(eigenVectorMatrix.isSquare(), new ArithmeticException("Matrix not square"));
 
             this.eigenbasis = eigenVectorMatrix;
@@ -952,32 +969,12 @@ public class MatrixSimple {
         }
     }
 
-    //TODO BROKEN
     public static class Diagonalization {
         public final MatrixSimple X, lambda;
         private final MatrixSimple Xinv;
-        private Diagonalization(MatrixSimple X, MatrixSimple lambda) {
+        private Diagonalization(@NotNull MatrixSimple X, @NotNull MatrixSimple lambda) {
             ExceptionChecker.assertTrue(lambda.isDiagonal(), new ArithmeticException("Matrix must be diagonal"));
 
-            /*
-            for (MatrixSimple vector : X.getCols()) {
-                double max = -Double.MAX_VALUE;
-                for (int row = 0; row < vector.getNumRows(); row++) {
-                    max = max(vector.get(row, 0), max);
-                }
-                for (int row = 0; row < vector.getNumRows(); row++) {
-                    vector.set(row, 0, vector.get(row, 0)/max);
-                }
-                System.out.println(vector);
-                System.out.println();
-            }
-
-            System.out.println("-------------------------------");
-
-            System.out.println(X);
-            System.out.println();
-            System.out.println(lambda);
-*/
             this.X = X;
             this.lambda = lambda;
             this.Xinv = X.invert();

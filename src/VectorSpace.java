@@ -1,6 +1,8 @@
+import org.jetbrains.annotations.NotNull;
+
 public class VectorSpace {
     private final MatrixSimple basisMatrix;
-    public VectorSpace(MatrixSimple[] vectors) {
+    public VectorSpace(MatrixSimple @NotNull [] vectors) {
         ExceptionChecker.assertTrue(vectors.length > 0, new ArithmeticException("A basis must have at least one vector."));
 
         MatrixSimple basisMatrix = vectors[0];
@@ -11,7 +13,7 @@ public class VectorSpace {
         ExceptionChecker.assertTrue(basisMatrix.nullity() == 0, new ArithmeticException("Basis vectors are not linearly independent"));
     }
 
-    public VectorSpace(MatrixSimple basisMatrix) {
+    public VectorSpace(@NotNull MatrixSimple basisMatrix) {
         this.basisMatrix = basisMatrix;
         ExceptionChecker.assertTrue(basisMatrix.nullity() == 0, new ArithmeticException("Basis vectors are not linearly independent"));
     }
@@ -24,7 +26,7 @@ public class VectorSpace {
         return basisMatrix.getCols();
     }
 
-    boolean contains(MatrixSimple vector) {
+    boolean contains(@NotNull MatrixSimple vector) {
         ExceptionChecker.assertTrue(vector.isVector(), new ArithmeticException("matrix is not a vector."));
 
         MatrixSimple sol = basisMatrix.augment(vector).rref();

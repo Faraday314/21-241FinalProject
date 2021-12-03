@@ -1,4 +1,5 @@
-import com.sun.istack.internal.NotNull;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import static java.lang.Math.*;
 
@@ -10,7 +11,7 @@ public class Vector2D extends EuclideanVector<Vector2D> {
         ExceptionChecker.assertTrue(vectorMatrix.getNumRows() == 2, new ArithmeticException("Matrix vector is wrong size."));
     }
 
-    public Vector2D(Point2D start, Point2D end) {
+    public Vector2D(@NotNull Point2D start, Point2D end) {
         super(start.vectorTo(end).vectorMatrix);
     }
     public Vector2D(Point2D end) {
@@ -21,7 +22,7 @@ public class Vector2D extends EuclideanVector<Vector2D> {
         super(x, y);
     }
 
-    public Vector2D(double r, double theta, AngleUnit angleUnit) {
+    public Vector2D(double r, double theta, @NotNull AngleUnit angleUnit) {
         super(CoordinateSystem2D.POLAR.convertTo(
                 CoordinateSystem2D.CARTESIAN
         ).apply(
@@ -29,7 +30,8 @@ public class Vector2D extends EuclideanVector<Vector2D> {
         ));
     }
 
-    public static Vector2D fromND(VectorND vector) {
+    @Contract("_ -> new")
+    public static @NotNull Vector2D fromND(@NotNull VectorND vector) {
         ExceptionChecker.assertEqual(vector.dim(), 2, new ArithmeticException("Vector dimensionality does not match."));
         return new Vector2D(vector.vectorMatrix.copy());
     }
@@ -52,7 +54,7 @@ public class Vector2D extends EuclideanVector<Vector2D> {
     }
 
     public void setY(double y) {
-        vectorMatrix.set(0,0, y);
+        vectorMatrix.set(1,0, y);
     }
 
     public double getTheta() {
@@ -64,6 +66,7 @@ public class Vector2D extends EuclideanVector<Vector2D> {
 
     public void setTheta(double thetaRadians) {
         double magnitude = magnitude();
+
         setX(magnitude*cos(thetaRadians));
         setY(magnitude*sin(thetaRadians));
     }
@@ -91,7 +94,7 @@ public class Vector2D extends EuclideanVector<Vector2D> {
         return rotate(angle, AngleUnit.RADIANS);
     }
 
-    public Vector3D cross(Vector2D vector) {
+    public Vector3D cross(@NotNull Vector2D vector) {
         return new Vector3D(
                 0,
                 0,

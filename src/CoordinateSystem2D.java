@@ -1,3 +1,5 @@
+import org.jetbrains.annotations.NotNull;
+
 import java.util.function.Function;
 
 import static java.lang.Math.*;
@@ -11,7 +13,7 @@ public enum CoordinateSystem2D implements CoordinateSystem<CoordinateSystem2D> {
     }
 
     @Override
-    public Function<double[], double[]> convertTo(CoordinateSystem2D coordinateSystem) {
+    public @NotNull Function<double[], double[]> convertTo(CoordinateSystem2D coordinateSystem) {
         if(this.equals(coordinateSystem)) {
             return (double[] point) -> point;
         }

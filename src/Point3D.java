@@ -1,7 +1,9 @@
+import org.jetbrains.annotations.NotNull;
+
 public class Point3D extends EuclideanPoint<Point3D, Vector3D> {
     private static final Point3D ORIGIN = new Point3D(0,0,0);
 
-    public Point3D(double a, double b, double c, CoordinateSystem3D coordinateSystem) {
+    public Point3D(double a, double b, double c, @NotNull CoordinateSystem3D coordinateSystem) {
         super(new Vector3D(
                 new MatrixSimple(coordinateSystem.convertTo(CoordinateSystem3D.CARTESIAN).apply(
                         new double[] {a, b, c}
@@ -13,7 +15,7 @@ public class Point3D extends EuclideanPoint<Point3D, Vector3D> {
         this(x, y, z, CoordinateSystem3D.CARTESIAN);
     }
 
-    public Point3D(double r, double theta, AngleUnit angleUnit, double z) {
+    public Point3D(double r, double theta, @NotNull AngleUnit angleUnit, double z) {
         this(
                 r,
                 angleUnit.convertTo(AngleUnit.RADIANS).apply(theta),
@@ -21,7 +23,7 @@ public class Point3D extends EuclideanPoint<Point3D, Vector3D> {
                 CoordinateSystem3D.CYLINDRICAL
         );
     }
-    public Point3D(double r, double inclination, AngleUnit inclinationUnit, double azimuth, AngleUnit azimuthUnit) {
+    public Point3D(double r, double inclination, @NotNull AngleUnit inclinationUnit, double azimuth, @NotNull AngleUnit azimuthUnit) {
         this(
                 r,
                 inclinationUnit.convertTo(AngleUnit.RADIANS).apply(inclination),

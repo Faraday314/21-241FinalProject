@@ -1,3 +1,5 @@
+import org.jetbrains.annotations.NotNull;
+
 public class VectorND extends EuclideanVector<VectorND> {
 
     public VectorND(MatrixSimple matrixVector) {
@@ -14,12 +16,12 @@ public class VectorND extends EuclideanVector<VectorND> {
     }
 
     @Override
-    public VectorND set(VectorND vector) {
+    public VectorND set(@NotNull VectorND vector) {
         return set(vector.vectorMatrix);
     }
 
     @Override
-    public VectorND set(MatrixSimple vectorMatrix) {
+    public VectorND set(@NotNull MatrixSimple vectorMatrix) {
         ExceptionChecker.assertTrue(vectorMatrix.isVector(), new ArithmeticException("matrix is not a vector."));
         ExceptionChecker.assertEqual(dim(), vectorMatrix.getNumRows(), new ArithmeticException("dimensionality of vectors does not match."));
 

@@ -1,3 +1,6 @@
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 import static java.lang.Math.*;
 
 public class Vector3D extends EuclideanVector<Vector3D> {
@@ -9,7 +12,7 @@ public class Vector3D extends EuclideanVector<Vector3D> {
         ExceptionChecker.assertTrue(vectorMatrix.getNumRows() == 3, new ArithmeticException("Matrix vector is wrong size."));
     }
 
-    public Vector3D(Point3D start, Point3D end) {
+    public Vector3D(@NotNull Point3D start, Point3D end) {
         super(start.vectorTo(end).vectorMatrix);
     }
     public Vector3D(Point3D end) {
@@ -20,14 +23,14 @@ public class Vector3D extends EuclideanVector<Vector3D> {
         super(x, y, z);
     }
 
-    public Vector3D(double a, double b, double c, CoordinateSystem3D coordinateSystem) {
+    public Vector3D(double a, double b, double c, @NotNull CoordinateSystem3D coordinateSystem) {
         super(coordinateSystem.convertTo(CoordinateSystem3D.CARTESIAN).apply(new double[] {a, b, c}));
     }
-    public Vector3D(double r, double azimuth, AngleUnit angleUnit, double z) {
+    public Vector3D(double r, double azimuth, @NotNull AngleUnit angleUnit, double z) {
         this(r, angleUnit.convertTo(AngleUnit.RADIANS).apply(azimuth), z, CoordinateSystem3D.CYLINDRICAL);
     }
 
-    public Vector3D(double r, double inclination, AngleUnit inclinationUnit, double azimuth, AngleUnit azimuthUnit) {
+    public Vector3D(double r, double inclination, @NotNull AngleUnit inclinationUnit, double azimuth, @NotNull AngleUnit azimuthUnit) {
         this(
                 r,
                 inclinationUnit.convertTo(AngleUnit.RADIANS).apply(inclination),
@@ -36,7 +39,8 @@ public class Vector3D extends EuclideanVector<Vector3D> {
         );
     }
 
-    public static Vector3D fromND(VectorND vector) {
+    @Contract("_ -> new")
+    public static @NotNull Vector3D fromND(@NotNull VectorND vector) {
         ExceptionChecker.assertEqual(vector.dim(), 3, new ArithmeticException("Vector dimensionality does not match."));
         return new Vector3D(vector.vectorMatrix.copy());
     }
@@ -88,7 +92,7 @@ public class Vector3D extends EuclideanVector<Vector3D> {
         setX(getAxialDistance()*cos(azimuthRadians));
         setY(getAxialDistance()*sin(azimuthRadians));
     }
-    public void setAzimuth(double azimuth, AngleUnit angleUnit) {
+    public void setAzimuth(double azimuth, @NotNull AngleUnit angleUnit) {
         setAzimuth(angleUnit.convertTo(AngleUnit.RADIANS).apply(azimuth));
     }
     public void setInclination(double inclinationRadians) {
@@ -98,11 +102,11 @@ public class Vector3D extends EuclideanVector<Vector3D> {
         setY(mag*sin(azimuth)*sin(inclinationRadians));
         setZ(mag*cos(inclinationRadians));
     }
-    public void setInclination(double inclination, AngleUnit angleUnit) {
+    public void setInclination(double inclination, @NotNull AngleUnit angleUnit) {
         setInclination(angleUnit.convertTo(AngleUnit.RADIANS).apply(inclination));
     }
 
-    public Vector3D rotate(double angle, AngleUnit angleUnit, Axis3D rotationAxis) {
+    public Vector3D rotate(double angle, @NotNull AngleUnit angleUnit, @NotNull Axis3D rotationAxis) {
         double theta = angleUnit.convertTo(AngleUnit.RADIANS).apply(angle);
         double cosine = cos(theta);
         double sine = sin(theta);
@@ -117,7 +121,7 @@ public class Vector3D extends EuclideanVector<Vector3D> {
         return copy().set(rotationMatrix.multiply(vectorMatrix));
     }
 
-    public Vector3D cross(Vector3D vector) {
+    public Vector3D cross(@NotNull Vector3D vector) {
         return new Vector3D(
                 this.getY()*vector.getZ() - this.getZ()*vector.getY(),
                 this.getZ()*vector.getX() - this.getX()*vector.getZ(),

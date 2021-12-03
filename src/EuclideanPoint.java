@@ -1,3 +1,5 @@
+import org.jetbrains.annotations.NotNull;
+
 import static java.lang.Math.sqrt;
 
 public abstract class EuclideanPoint<P extends EuclideanPoint<P,V>, V extends EuclideanVector<V>> implements Point<P,V> {
@@ -13,7 +15,7 @@ public abstract class EuclideanPoint<P extends EuclideanPoint<P,V>, V extends Eu
     }
 
     @Override
-    public double distanceTo(P point) {
+    public double distanceTo(@NotNull P point) {
         double[] coordinates1 = getCoordinates();
         double[] coordinates2 = point.getCoordinates();
         double dst = 0;
@@ -25,13 +27,13 @@ public abstract class EuclideanPoint<P extends EuclideanPoint<P,V>, V extends Eu
     }
 
     @Override
-    public double distanceTo(Line<P,V> line) {
+    public double distanceTo(@NotNull Line<P,V> line) {
         return line.distanceTo((P) this);
     }
 
     @Override
-    public V vectorTo(P point) {
-        return pointVector.copy().set(pointVector.subtract(point.pointVector));
+    public V vectorTo(@NotNull P point) {
+        return pointVector.copy().set(point.pointVector.subtract(pointVector));
     }
 
     public int dim() {

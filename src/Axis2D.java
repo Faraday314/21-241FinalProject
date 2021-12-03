@@ -1,3 +1,5 @@
+import org.jetbrains.annotations.NotNull;
+
 /**
  * A mathematical class representing a 2D axis.
  * <p>
@@ -26,7 +28,7 @@ public class Axis2D implements Axis<Vector2D> {
      *
      * @param axisVector A vector pointing in the direction of the axis.
      */
-    public Axis2D(Vector2D axisVector) {
+    public Axis2D(@NotNull Vector2D axisVector) {
         axisUnitVector = axisVector.normalize();
     }
 

@@ -1,7 +1,7 @@
-import com.sun.istack.internal.NotNull;
+import org.jetbrains.annotations.NotNull;
 
 public class SymmetricMatrix extends MatrixSimple {
-    public SymmetricMatrix(MatrixSimple matrix) {
+    public SymmetricMatrix(@NotNull MatrixSimple matrix) {
         super(matrix.vals);
         ExceptionChecker.assertTrue(isSymmetric(), new ArithmeticException("Matrix is not symmetric."));
     }
@@ -16,7 +16,7 @@ public class SymmetricMatrix extends MatrixSimple {
 
         MatrixSimple identity = MatrixSimple.identityMatrix(qrFactorization.Q.getNumRows());
 
-        while(!A.round(7).isDiagonal()) {
+        while(!A.round(DECIMAL_ACCURACY).isDiagonal()) {
 
             double s = A.get(getNumRows()-1, getNumRows()-1);
             MatrixSimple smult = MatrixSimple.identityMatrix(A.getNumRows()).multiply(s);
@@ -36,13 +36,6 @@ public class SymmetricMatrix extends MatrixSimple {
             }
         }
 
-        return new SpectralDecomposition(A, S);
-    }
-
-    public static class SpectralDecomposition extends EigenData {
-        protected SpectralDecomposition(MatrixSimple diagEigenvalueMatrix, @NotNull MatrixSimple eigenVectorMatrix) {
-            super(diagEigenvalueMatrix, eigenVectorMatrix);
-            //TODO ensure eigenvectormatrix is orthogonal (orthonormal cols and unit eigenvectors)
-        }
+        return new EigenData(A, S);
     }
 }

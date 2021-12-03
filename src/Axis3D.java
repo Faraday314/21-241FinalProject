@@ -1,3 +1,5 @@
+import org.jetbrains.annotations.NotNull;
+
 /**
  * A mathematical class representing a 3D axis.
  * <p>
@@ -28,7 +30,7 @@ public class Axis3D implements Axis<Vector3D> {
      *
      * @param axisVector A vector pointing in the direction of the axis.
      */
-    public Axis3D(Vector3D axisVector) {
+    public Axis3D(@NotNull Vector3D axisVector) {
         axisUnitVector = axisVector.normalize();
     }
 

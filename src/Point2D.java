@@ -1,7 +1,9 @@
+import org.jetbrains.annotations.NotNull;
+
 public class Point2D extends EuclideanPoint<Point2D, Vector2D> {
     private static final Point2D ORIGIN = new Point2D(0,0);
 
-    public Point2D(double a, double b, CoordinateSystem2D coordinateSystem) {
+    public Point2D(double a, double b, @NotNull CoordinateSystem2D coordinateSystem) {
         super(new Vector2D(
                 new MatrixSimple(coordinateSystem.convertTo(CoordinateSystem2D.CARTESIAN).apply(
                         new double[] {a, b}
@@ -13,7 +15,7 @@ public class Point2D extends EuclideanPoint<Point2D, Vector2D> {
         this(x, y, CoordinateSystem2D.CARTESIAN);
     }
 
-    public Point2D(double r, double theta, AngleUnit angleUnit) {
+    public Point2D(double r, double theta, @NotNull AngleUnit angleUnit) {
         this(r, angleUnit.convertTo(AngleUnit.RADIANS).apply(theta), CoordinateSystem2D.POLAR);
     }
     public Point2D(Vector2D vector) {

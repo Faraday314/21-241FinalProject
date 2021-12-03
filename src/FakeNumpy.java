@@ -1,3 +1,7 @@
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.*;
 
 /**
@@ -26,7 +30,7 @@ public class FakeNumpy {
      * @param <T> The element type of the array.
      * @return The maximum of the array.
      */
-    public static <T extends Comparable<? super T>> T max(T[] array) {
+    public static <T extends Comparable<? super T>> @Nullable T max(T @NotNull [] array) {
         if(array.length == 0) {
             return null;
         }
@@ -55,7 +59,7 @@ public class FakeNumpy {
      * @param array The input array.
      * @return The maximum of the array.
      */
-    public static double max(double[] array) {
+    public static double max(double @NotNull [] array) {
         if(array.length == 0) {
             return 0;
         }
@@ -82,7 +86,7 @@ public class FakeNumpy {
      * @param array The input array.
      * @return The maximum of the array.
      */
-    public static int max(int[] array) {
+    public static int max(int @NotNull [] array) {
         if(array.length == 0) {
             return 0;
         }
@@ -109,7 +113,7 @@ public class FakeNumpy {
      * @param array The input array.
      * @return The maximum of the array.
      */
-    public static float max(float[] array) {
+    public static float max(float @NotNull [] array) {
         if(array.length == 0) {
             return 0;
         }
@@ -136,7 +140,7 @@ public class FakeNumpy {
      * @param array The input array.
      * @return The maximum of the array.
      */
-    public static long max(long[] array) {
+    public static long max(long @NotNull [] array) {
         if(array.length == 0) {
             return 0;
         }
@@ -163,7 +167,7 @@ public class FakeNumpy {
      * @param array The input array.
      * @return The maximum of the array.
      */
-    public static short max(short[] array) {
+    public static short max(short @NotNull [] array) {
         if(array.length == 0) {
             return 0;
         }
@@ -192,7 +196,7 @@ public class FakeNumpy {
      * @return The minimum of the array.
      */
     
-    public static <T extends Comparable<? super T>> T min(T[] array) {
+    public static <T extends Comparable<? super T>> @Nullable T min(T @NotNull [] array) {
         if(array.length == 0) {
             return null;
         }
@@ -221,7 +225,7 @@ public class FakeNumpy {
      * @param array The input array.
      * @return The minimum of the array.
      */
-    public static double min(double[] array) {
+    public static double min(double @NotNull [] array) {
         if(array.length == 0) {
             return 0;
         }
@@ -248,7 +252,7 @@ public class FakeNumpy {
      * @param array The input array.
      * @return The minimum of the array.
      */
-    public static int min(int[] array) {
+    public static int min(int @NotNull [] array) {
         if(array.length == 0) {
             return 0;
         }
@@ -275,7 +279,7 @@ public class FakeNumpy {
      * @param array The input array.
      * @return The minimum of the array.
      */
-    public static float min(float[] array) {
+    public static float min(float @NotNull [] array) {
         if(array.length == 0) {
             return 0;
         }
@@ -302,7 +306,7 @@ public class FakeNumpy {
      * @param array The input array.
      * @return The minimum of the array.
      */
-    public static long min(long[] array) {
+    public static long min(long @NotNull [] array) {
         if(array.length == 0) {
             return 0;
         }
@@ -329,7 +333,7 @@ public class FakeNumpy {
      * @param array The input array.
      * @return The minimum of the array.
      */
-    public static short min(short[] array) {
+    public static short min(short @NotNull [] array) {
         if(array.length == 0) {
             return 0;
         }
@@ -359,7 +363,8 @@ public class FakeNumpy {
      * @param <T> The element type of the array.
      * @return The slice of the array that goes from startIdx to endIdx (inclusive).
      */
-    public static <T> T[] slice(T[] array, int startIdx, int endIdx) {
+    @Contract(value = "_, _, _ -> new", pure = true)
+    public static <T> T @NotNull [] slice(T[] array, int startIdx, int endIdx) {
         return Arrays.copyOfRange(array, startIdx, endIdx + 1);
     }
 
@@ -371,7 +376,8 @@ public class FakeNumpy {
      * @param endIdx The ending index for the slice.
      * @return The slice of the array that goes from startIdx to endIdx (inclusive).
      */
-    public static double[] slice(double[] array, int startIdx, int endIdx) {
+    @Contract(value = "_, _, _ -> new", pure = true)
+    public static double @NotNull [] slice(double[] array, int startIdx, int endIdx) {
         return Arrays.copyOfRange(array, startIdx, endIdx + 1);
     }
 
@@ -383,7 +389,8 @@ public class FakeNumpy {
      * @param endIdx The ending index for the slice.
      * @return The slice of the array that goes from startIdx to endIdx (inclusive).
      */
-    public static int[] slice(int[] array, int startIdx, int endIdx) {
+    @Contract(value = "_, _, _ -> new", pure = true)
+    public static int @NotNull [] slice(int[] array, int startIdx, int endIdx) {
         return Arrays.copyOfRange(array, startIdx, endIdx + 1);
     }
 
@@ -395,7 +402,8 @@ public class FakeNumpy {
      * @param endIdx The ending index for the slice.
      * @return The slice of the array that goes from startIdx to endIdx (inclusive).
      */
-    public static float[] slice(float[] array, int startIdx, int endIdx) {
+    @Contract(value = "_, _, _ -> new", pure = true)
+    public static float @NotNull [] slice(float[] array, int startIdx, int endIdx) {
         return Arrays.copyOfRange(array, startIdx, endIdx + 1);
     }
 
@@ -407,7 +415,8 @@ public class FakeNumpy {
      * @param endIdx The ending index for the slice.
      * @return The slice of the array that goes from startIdx to endIdx (inclusive).
      */
-    public static long[] slice(long[] array, int startIdx, int endIdx) {
+    @Contract(value = "_, _, _ -> new", pure = true)
+    public static long @NotNull [] slice(long[] array, int startIdx, int endIdx) {
         return Arrays.copyOfRange(array, startIdx, endIdx + 1);
     }
 
@@ -419,7 +428,8 @@ public class FakeNumpy {
      * @param endIdx The ending index for the slice.
      * @return The slice of the array that goes from startIdx to endIdx (inclusive).
      */
-    public static short[] slice(short[] array, int startIdx, int endIdx) {
+    @Contract(value = "_, _, _ -> new", pure = true)
+    public static short @NotNull [] slice(short[] array, int startIdx, int endIdx) {
         return Arrays.copyOfRange(array, startIdx, endIdx + 1);
     }
 
@@ -429,7 +439,7 @@ public class FakeNumpy {
      * @param array The input array.
      * @param multiplier The constant to multiply by.
      */
-    public static void multiply(double[] array, double multiplier) {
+    public static void multiply(double @NotNull [] array, double multiplier) {
         for(int i = 0; i < array.length; i++) {
             array[i] = array[i]*multiplier;
         }
@@ -441,7 +451,7 @@ public class FakeNumpy {
      * @param array The input array.
      * @param multiplier The constant to multiply by.
      */
-    public static void multiply(int[] array, int multiplier) {
+    public static void multiply(int @NotNull [] array, int multiplier) {
         for(int i = 0; i < array.length; i++) {
             array[i] = array[i]*multiplier;
         }
@@ -453,7 +463,7 @@ public class FakeNumpy {
      * @param array The input array.
      * @param multiplier The constant to multiply by.
      */
-    public static void multiply(float[] array, float multiplier) {
+    public static void multiply(float @NotNull [] array, float multiplier) {
         for(int i = 0; i < array.length; i++) {
             array[i] = array[i]*multiplier;
         }
@@ -465,7 +475,7 @@ public class FakeNumpy {
      * @param array The input array.
      * @param multiplier The constant to multiply by.
      */
-    public static void multiply(long[] array, long multiplier) {
+    public static void multiply(long @NotNull [] array, long multiplier) {
         for(int i = 0; i < array.length; i++) {
             array[i] = array[i]*multiplier;
         }
@@ -477,7 +487,7 @@ public class FakeNumpy {
      * @param array The input array.
      * @param multiplier The constant to multiply by.
      */
-    public static void multiply(int[] array, double multiplier) {
+    public static void multiply(int @NotNull [] array, double multiplier) {
         for(int i = 0; i < array.length; i++) {
             array[i] = (int) Math.round(array[i]*multiplier);
         }
@@ -489,7 +499,7 @@ public class FakeNumpy {
      * @param array The input array.
      * @param multiplier The constant to multiply by.
      */
-    public static void multiply(float[] array, double multiplier) {
+    public static void multiply(float @NotNull [] array, double multiplier) {
         for(int i = 0; i < array.length; i++) {
             array[i] = array[i]*(float) multiplier;
         }
@@ -501,7 +511,7 @@ public class FakeNumpy {
      * @param array The input array.
      * @param multiplier The constant to multiply by.
      */
-    public static void multiply(long[] array, double multiplier) {
+    public static void multiply(long @NotNull [] array, double multiplier) {
         for(int i = 0; i < array.length; i++) {
             array[i] = Math.round(array[i]*multiplier);
         }
@@ -590,7 +600,8 @@ public class FakeNumpy {
      * @param array The input array.
      * @return The absolute value of the input array.
      */
-    public static double[] abs(double[] array) {
+    @Contract(pure = true)
+    public static double @NotNull [] abs(double @NotNull [] array) {
         double[] output = new double[array.length];
         for (int i = 0; i < array.length; i++) {
             output[i] = Math.abs(array[i]);
@@ -604,7 +615,8 @@ public class FakeNumpy {
      * @param array The input array.
      * @return The absolute value of the input array.
      */
-    public static int[] abs(int[] array) {
+    @Contract(pure = true)
+    public static int @NotNull [] abs(int @NotNull [] array) {
         int[] output = new int[array.length];
         for (int i = 0; i < array.length; i++) {
             output[i] = Math.abs(array[i]);
@@ -618,7 +630,8 @@ public class FakeNumpy {
      * @param array The input array.
      * @return The absolute value of the input array.
      */
-    public static float[] abs(float[] array) {
+    @Contract(pure = true)
+    public static float @NotNull [] abs(float @NotNull [] array) {
         float[] output = new float[array.length];
         for (int i = 0; i < array.length; i++) {
             output[i] = Math.abs(array[i]);
@@ -632,7 +645,8 @@ public class FakeNumpy {
      * @param array The input array.
      * @return The absolute value of the input array.
      */
-    public static long[] abs(long[] array) {
+    @Contract(pure = true)
+    public static long @NotNull [] abs(long @NotNull [] array) {
         long[] output = new long[array.length];
         for (int i = 0; i < array.length; i++) {
             output[i] = Math.abs(array[i]);
@@ -640,7 +654,7 @@ public class FakeNumpy {
         return output;
     }
 
-    public static <T> boolean checkForDuplicates(T[] array) {
+    public static <T> boolean checkForDuplicates(T @NotNull [] array) {
         Set<T> set = new HashSet<>();
         for(T element : array) {
             if(set.contains(element)) {
@@ -651,7 +665,7 @@ public class FakeNumpy {
         return false;
     }
 
-    public static <T> T[] removeDuplicates(T[] array)
+    public static <T> T @NotNull [] removeDuplicates(T[] array)
     {
         Set<T> set = new LinkedHashSet<>(Arrays.asList(array));
 
@@ -668,7 +682,8 @@ public class FakeNumpy {
         return (x % modulus + modulus) % modulus;
     }
 
-    public static double[] add(double[] list1, double[] list2) {
+    @Contract(pure = true)
+    public static double @NotNull [] add(double @NotNull [] list1, double @NotNull [] list2) {
         if(list1.length != list2.length) {
             throw new ArithmeticException("Arrays are different sizes, can't be subtracted");
         }
@@ -680,7 +695,8 @@ public class FakeNumpy {
         return output;
     }
 
-    public static int[] add(int[] list1, int[] list2) {
+    @Contract(pure = true)
+    public static int @NotNull [] add(int @NotNull [] list1, int @NotNull [] list2) {
         if(list1.length != list2.length) {
             throw new ArithmeticException("Arrays are different sizes, can't be subtracted");
         }
@@ -693,27 +709,28 @@ public class FakeNumpy {
     }
 
     //list1 - list2
-    public static double[] subtract(double[] list1, double[] list2) {
+    public static double @NotNull [] subtract(double[] list1, double @NotNull [] list2) {
         double[] list2cpy = list2.clone();
         multiply(list2cpy, -1);
         return add(list2cpy, list1);
     }
 
-    public static int[] subtract(int[] list1, int[] list2) {
+    public static int @NotNull [] subtract(int[] list1, int @NotNull [] list2) {
         int[] list2cpy = list2.clone();
         multiply(list2cpy, -1);
         return add(list2cpy, list1);
     }
 
-    public static double[] absdiff(double[] list1, double[] list2) {
+    public static double @NotNull [] absdiff(double[] list1, double[] list2) {
         return abs(subtract(list1,list2));
     }
 
-    public static int[] absdiff(int[] list1, int[] list2) {
+    public static int @NotNull [] absdiff(int[] list1, int[] list2) {
         return abs(subtract(list1,list2));
     }
 
-    public static double average(double[] list) {
+    @Contract(pure = true)
+    public static double average(double @NotNull [] list) {
         double sum = 0;
         for(double d : list) {
             sum += d;
@@ -721,7 +738,8 @@ public class FakeNumpy {
         return sum/list.length;
     }
 
-    public static int[] round(double[] list) {
+    @Contract(pure = true)
+    public static int @NotNull [] round(double @NotNull [] list) {
         int[] output = new int[list.length];
         for (int i = 0; i < list.length; i++) {
             output[i] = (int) Math.round(list[i]);
@@ -729,7 +747,8 @@ public class FakeNumpy {
         return output;
     }
 
-    public static double[] floatingPointFix(double[] list) {
+    @Contract("_ -> param1")
+    public static double[] floatingPointFix(double @NotNull [] list) {
         for (int i = 0; i < list.length; i++) {
             list[i] = Math.round(list[i]*FLOATING_POINT_FIXER_CONSTANT)/FLOATING_POINT_FIXER_CONSTANT;
         }
